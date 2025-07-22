@@ -3,7 +3,9 @@
   "path": "/",
   "sections": [
     {
-      "__resolveType": "Header"
+      "__resolveType": "Header",
+      "logoWidth": 132,
+      "logoHeight": 74
     },
     {
       "__resolveType": "site/sections/BannerCarousel.tsx",

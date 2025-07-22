@@ -32,6 +32,7 @@ export type AvailableIcons =
   | "QuestionMarkCircle"
   | "Return"
   | "Ruler"
+  | "search-icon"
   | "ShoppingCart"
   | "Star"
   | "Tiktok"
