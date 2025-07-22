@@ -1,1 +1,58 @@
-{"__resolveType":"site/sections/Footer.tsx","links":[],"bottomLinks":[],"social":[],"subscribe":{}}
+{
+  "__resolveType": "site/sections/Footer.tsx",
+  "links": [],
+  "bottomLinks": [],
+  "social": [],
+  "subscribe": {},
+  "socialSection": {
+    "networks": [
+      {
+        "name": "Youtube",
+        "icon": "https://assets.decocache.com/cazetv/555fa5ce-3c12-4abe-992a-6a9e60cebd59/Social-Icons.svg",
+        "href": "#"
+      },
+      {
+        "name": "Instagram",
+        "icon": "https://assets.decocache.com/cazetv/bad18ffd-6064-4159-a1fa-2eb8a1380ee4/Social-Icons-(1).svg",
+        "href": "#"
+      },
+      {
+        "name": "X",
+        "icon": "https://assets.decocache.com/cazetv/6f2825f0-d1a8-479e-baee-b01f642cacca/Social-Icons-(2).svg",
+        "href": "#"
+      },
+      {
+        "name": "Tiktok",
+        "icon": "https://assets.decocache.com/cazetv/c5c8e2e0-d575-4f62-b36e-495ecdfcd13a/Social-Icons-(3).svg",
+        "href": "#"
+      }
+    ],
+    "title": "Siga a CazéTV"
+  },
+  "platformsSection": {
+    "platforms": [],
+    "title": "Disponível nas plataformas"
+  },
+  "navigation": [
+    {
+      "label": "Ao vivo",
+      "href": "#"
+    },
+    {
+      "label": "Todos os jogos",
+      "href": "#"
+    },
+    {
+      "label": "Todas as competições",
+      "href": "#"
+    },
+    {
+      "label": "Todos os programas",
+      "href": "#"
+    }
+  ],
+  "centerLogo": {
+    "src": "https://assets.decocache.com/cazetv/da388496-54fc-421a-86de-3155853f8237/cazetv-logo.png",
+    "href": "/"
+  }
+}
