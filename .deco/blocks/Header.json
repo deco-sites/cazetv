@@ -1,1 +1,24 @@
-{"__resolveType":"site/sections/Header.tsx","navigation":{"links":[],"buttons":[]}}
+{
+  "__resolveType": "site/sections/Header.tsx",
+  "navigation": [
+    {
+      "label": "JOGOS",
+      "href": "/jogos"
+    },
+    {
+      "label": "COMPETIÇÕES",
+      "href": "/competicoes"
+    },
+    {
+      "label": "PROGRAMAS",
+      "href": "/programas"
+    }
+  ],
+  "socialMedia": {
+    "youtube": "https://youtube.com/@cazetv",
+    "instagram": "https://instagram.com/cazetv",
+    "twitter": "https://twitter.com/cazetv",
+    "tiktok": "https://tiktok.com/@cazetv"
+  },
+  "logo": "https://assets.decocache.com/cazetv/48c13a7a-52ad-435b-bb41-03b02e62f4e7/logo-caze-tv.png"
+}
