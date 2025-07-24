@@ -31,7 +31,32 @@
       "customClass": ""
     },
     {
-      "__resolveType": "site/sections/ImageWithParagraph.tsx"
+      "__resolveType": "site/sections/GameSchedule.tsx",
+      "liveGames": [
+        {
+          "id": "flamengo-esperance",
+          "isLive": true,
+          "thumbnail": "https://assets.decocache.com/cazetv/036d6a04-c654-40f4-96f1-310f47c7efd4/CMC_THUMB_JOGO_AO-VIVO-1.jpg",
+          "title": "Flamengo x Esperance",
+          "championship": "Copa do Mundo de Clubes 2025"
+        }
+      ],
+      "upcomingGames": [
+        {
+          "id": "flamengo-esperance",
+          "isLive": true,
+          "thumbnail": "https://assets.decocache.com/cazetv/036d6a04-c654-40f4-96f1-310f47c7efd4/CMC_THUMB_JOGO_AO-VIVO-1.jpg",
+          "title": "Flamengo x Esperance",
+          "championship": "Copa do Mundo de Clubes 2025"
+        },
+        {
+          "id": "flamengo-esperance",
+          "isLive": true,
+          "thumbnail": "https://assets.decocache.com/cazetv/036d6a04-c654-40f4-96f1-310f47c7efd4/CMC_THUMB_JOGO_AO-VIVO-1.jpg",
+          "title": "Flamengo x Esperance",
+          "championship": "Copa do Mundo de Clubes 2025"
+        }
+      ]
     },
     {
       "__resolveType": "site/sections/ImageWithParagraph.tsx",
