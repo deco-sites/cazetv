@@ -1,6 +1,7 @@
 import { useSection } from "@deco/deco/hooks";
 import { useDevice } from "@deco/deco/hooks";
 import type { ImageWidget } from "apps/admin/widgets.ts";
+import Slider from "../components/ui/Slider.tsx";
 
 export interface Game {
   id?: string;
@@ -47,8 +48,26 @@ export default function GameSchedule({
   // Verificar se há jogos ao vivo para aplicar padding no primeiro próximo jogo
   const hasLiveGames = liveGames && liveGames.length > 0;
   
-  const GameCard = ({ game, isFirstUpcoming = false }: { game: Game; isFirstUpcoming?: boolean }) => (
-    <div class={`flex-shrink-0 min-w-[300px] max-w-[600px] rounded-lg overflow-hidden ${isFirstUpcoming && hasLiveGames ? 'ml-14' : ''}`}>
+  const GameCard = ({ game, isFirstUpcoming = false, isFirstLive = false }: { game: Game; isFirstUpcoming?: boolean; isFirstLive?: boolean }) => (
+    <div class={`flex-shrink-0 ${isMobile ? 'min-w-[300px] max-w-[90vw]' : 'min-w-[300px] max-w-[600px]'} rounded-lg relative`}>
+      
+      {/* Título AO VIVO para o primeiro card ao vivo - apenas desktop */}
+      {!isMobile && isFirstLive && (
+        <div class="absolute z-10" style="bottom: calc(100% + 12px); left: 0;">
+          <div class="live-badge">
+            <div class="live-badge-dot"></div>
+            <span class="live-badge-text">AO VIVO</span>
+          </div>
+        </div>
+      )}
+      
+      {/* Título PRÓXIMOS JOGOS para o primeiro card de próximos - apenas desktop */}
+      {!isMobile && isFirstUpcoming && (
+        <div class="absolute z-10" style="bottom: calc(100% + 24px); left: 0;">
+          <h2 class="text-white text-2xl font-bold">PRÓXIMOS JOGOS</h2>
+        </div>
+      )}
+      
       {/* Thumbnail com overlay */}
       <div class="relative w-full" style="aspect-ratio: 16/9;">
         <img 
@@ -59,16 +78,6 @@ export default function GameSchedule({
         
         {/* Overlay escuro */}
         <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-
-        {/* Badge AO VIVO para jogos ao vivo */}
-        {game.isLive && (
-          <div class="absolute top-4 left-4">
-            <div class="live-badge-small">
-              <div class="live-badge-dot-small"></div>
-              <span class="live-badge-text-small">AO VIVO</span>
-            </div>
-          </div>
-        )}
 
         {/* Horário para jogos futuros */}
         {game.startTime && (
@@ -104,7 +113,7 @@ export default function GameSchedule({
         <div class="container mx-auto px-4 lg:px-10 max-w-[1600px]">
           
           {isMobile ? (
-            /* LAYOUT MOBILE - Dois carousels separados */
+            /* LAYOUT MOBILE - Dois sliders separados */
             <div class="flex flex-col gap-6">
               
               {/* Jogos AO VIVO - Mobile */}
@@ -117,16 +126,34 @@ export default function GameSchedule({
                     </div>
                   </div>
                   
-                  <div class="relative">
-                    <div 
-                      id="live-carousel-mobile" 
-                      class="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth"
-                      style="scrollbar-width: none; -ms-overflow-style: none;"
+                  <div id="live-games-mobile" class="relative">
+                    <Slider
+                      rootId="live-games-mobile"
+                      scroll="smooth"
+                      class="flex gap-4 overflow-x-auto scrollbar-hide"
                     >
                       {liveGames.map((game, index) => (
-                        <GameCard key={`live-mobile-${index}`} game={game} />
+                        <Slider.Item key={`live-mobile-${index}`} index={index}>
+                          <GameCard game={game} />
+                        </Slider.Item>
                       ))}
-                    </div>
+                    </Slider>
+                    
+                    {/* Botões de navegação para mobile - jogos ao vivo */}
+                    {liveGames.length > 1 && (
+                      <>
+                        <Slider.PrevButton class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all duration-200 z-10">
+                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                          </svg>
+                        </Slider.PrevButton>
+                        <Slider.NextButton class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all duration-200 z-10">
+                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                          </svg>
+                        </Slider.NextButton>
+                      </>
+                    )}
                   </div>
                 </div>
               )}
@@ -136,82 +163,84 @@ export default function GameSchedule({
                 <div>
                   <h2 class="text-white text-2xl font-bold mb-6">PRÓXIMOS JOGOS</h2>
                   
-                  <div class="relative">
-                    <div 
-                      id="upcoming-carousel-mobile" 
-                      class="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth"
-                      style="scrollbar-width: none; -ms-overflow-style: none;"
+                  <div id="upcoming-games-mobile" class="relative">
+                    <Slider
+                      rootId="upcoming-games-mobile"
+                      scroll="smooth"
+                      class="flex gap-4 overflow-x-auto scrollbar-hide"
                     >
                       {upcomingGames.map((game, index) => (
-                        <GameCard 
-                          key={`upcoming-mobile-${index}`} 
-                          game={game} 
-                          isFirstUpcoming={index === 0}
-                        />
+                        <Slider.Item key={`upcoming-mobile-${index}`} index={index}>
+                          <GameCard game={game} />
+                        </Slider.Item>
                       ))}
-                    </div>
+                    </Slider>
+                    
+                    {/* Botões de navegação para mobile - próximos jogos */}
+                    {upcomingGames.length > 1 && (
+                      <>
+                        <Slider.PrevButton class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all duration-200 z-10">
+                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                          </svg>
+                        </Slider.PrevButton>
+                        <Slider.NextButton class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all duration-200 z-10">
+                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                          </svg>
+                        </Slider.NextButton>
+                      </>
+                    )}
                   </div>
                 </div>
               )}
             </div>
           ) : (
-            /* LAYOUT DESKTOP - Um carousel único */
+            /* LAYOUT DESKTOP - Um slider único */
             <div>
-              {/* Título combinado para desktop */}
-              <div class="flex items-center gap-6 mb-6">
-                {liveGames && liveGames.length > 0 && (
-                  <div class="live-badge">
-                    <div class="live-badge-dot"></div>
-                    <span class="live-badge-text">AO VIVO</span>
-                  </div>
-                )}
-                {upcomingGames && upcomingGames.length > 0 && (
-                  <h2 class="text-white text-2xl font-bold">PRÓXIMOS JOGOS</h2>
-                )}
-              </div>
-              
-              {/* Carousel único com todos os jogos */}
+              {/* Slider único com todos os jogos */}
               {allGames.length > 0 && (
-                <div class="relative">
-                  <div 
-                    id="all-games-carousel" 
-                    class="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth"
-                    style="scrollbar-width: none; -ms-overflow-style: none;"
+                <div id="all-games-desktop" class="relative">
+                  <Slider
+                    rootId="all-games-desktop"
+                    scroll="smooth"
+                    class="flex gap-4 overflow-x-auto scrollbar-hide pt-16"
                   >
                     {allGames.map((game, index) => {
                       // Verificar se é o primeiro jogo de próximos (após os jogos ao vivo)
                       const liveGamesCount = liveGames?.length || 0;
                       const isFirstUpcoming = index === liveGamesCount && liveGamesCount > 0;
+                      const isFirstLive = index === 0 && liveGames && liveGames.length > 0;
                       
                       return (
-                        <GameCard 
+                        <Slider.Item 
                           key={`all-${index}`} 
-                          game={game} 
-                          isFirstUpcoming={isFirstUpcoming}
-                        />
+                          index={index}
+                          class={`${!isMobile && isFirstUpcoming && hasLiveGames ? 'pl-14' : ''}`}
+                        >
+                          <GameCard 
+                            game={game} 
+                            isFirstUpcoming={isFirstUpcoming}
+                            isFirstLive={isFirstLive}
+                          />
+                        </Slider.Item>
                       );
                     })}
-                  </div>
+                  </Slider>
                   
                   {/* Botões de navegação para desktop */}
                   {allGames.length > 1 && (
                     <>
-                      <button 
-                        class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all duration-200"
-                        onclick="document.getElementById('all-games-carousel').scrollBy({left: -320, behavior: 'smooth'})"
-                      >
+                      <Slider.PrevButton class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all duration-200 z-10">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                         </svg>
-                      </button>
-                      <button 
-                        class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all duration-200"
-                        onclick="document.getElementById('all-games-carousel').scrollBy({left: 320, behavior: 'smooth'})"
-                      >
+                      </Slider.PrevButton>
+                      <Slider.NextButton class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all duration-200 z-10">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
-                      </button>
+                      </Slider.NextButton>
                     </>
                   )}
                 </div>
@@ -265,34 +294,6 @@ export default function GameSchedule({
             font-weight: bold;
             font-size: 24px;
             letter-spacing: 1px;
-            text-transform: uppercase;
-          }
-
-          /* Badge AO VIVO pequeno para os cards */
-          .live-badge-small {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 4px 8px;
-            background: linear-gradient(135deg, #FC3C73 0%, #E91E63 100%);
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(252, 60, 115, 0.3);
-            gap: 4px;
-          }
-          
-          .live-badge-dot-small {
-            width: 6px;
-            height: 6px;
-            background: white;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-          }
-          
-          .live-badge-text-small {
-            color: white;
-            font-weight: bold;
-            font-size: 12px;
-            letter-spacing: 0.5px;
             text-transform: uppercase;
           }
           
