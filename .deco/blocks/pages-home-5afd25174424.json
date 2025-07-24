@@ -59,18 +59,108 @@
       ]
     },
     {
-      "__resolveType": "site/sections/ImageWithParagraph.tsx",
-      "placement": "right"
+      "__resolveType": "site/sections/Image.tsx",
+      "desktop": {
+        "image": "https://assets.decocache.com/cazetv/c4995b62-edc5-4a24-a330-60a9c39a08c6/guarana-antartica-adbreak.jpg",
+        "width": 1200,
+        "height": 600
+      },
+      "mobile": {
+        "image": "https://assets.decocache.com/cazetv/c4995b62-edc5-4a24-a330-60a9c39a08c6/guarana-antartica-adbreak.jpg",
+        "width": 375,
+        "height": 300
+      },
+      "alt": "Imagem exemplo CazéTV",
+      "preload": false
     },
     {
-      "__resolveType": "site/sections/BlogPosts.tsx"
-    },
-    {
-      "__resolveType": "site/sections/Testimonials.tsx",
-      "arrows": true
-    },
-    {
-      "__resolveType": "site/sections/Faq.tsx"
+      "__resolveType": "site/sections/EventsAgenda.tsx",
+      "title": "AGENDA",
+      "youtubeLink": "https://youtube.com/cazetv",
+      "currentMonth": "Janeiro",
+      "backToTodayText": "Voltar para hoje",
+      "dateTabs": [
+        {
+          "label": "dom",
+          "value": "05",
+          "isActive": false
+        },
+        {
+          "label": "Ontem",
+          "value": "",
+          "isActive": false
+        },
+        {
+          "label": "Hoje",
+          "value": "",
+          "isActive": true
+        },
+        {
+          "label": "Amanhã",
+          "value": "",
+          "isActive": false
+        },
+        {
+          "label": "qui",
+          "value": "09",
+          "isActive": false
+        },
+        {
+          "label": "sex",
+          "value": "10",
+          "isActive": false
+        }
+      ],
+      "filterLabel": "Filtrar por tipo de evento",
+      "filterPlaceholder": "Tudo",
+      "events": [
+        {
+          "time": "10H",
+          "logo": "https://assets.decocache.com/cazetv/7f734a0b-ce6f-4d33-b4e7-5defed1dabdf/banner-escuro-cazetv.jpg",
+          "title": "CaféTV",
+          "description": "seu reforço diário para copa do mundo de clubes",
+          "isHighlighted": false
+        },
+        {
+          "time": "AGORA",
+          "title": "Copa do Mundo de Clubes",
+          "description": "semifinal",
+          "isHighlighted": true,
+          "isLive": true,
+          "teams": {
+            "team1": "https://assets.decocache.com/cazetv/036d6a04-c654-40f4-96f1-310f47c7efd4/CMC_THUMB_JOGO_AO-VIVO-1.jpg",
+            "team2": "https://assets.decocache.com/cazetv/036d6a04-c654-40f4-96f1-310f47c7efd4/CMC_THUMB_JOGO_AO-VIVO-1.jpg"
+          },
+          "platforms": [
+            "Youtube",
+            "Disney+",
+            "Prime Video"
+          ],
+          "logo": "https://assets.decocache.com/cazetv/aca05fcd-dfad-446f-9fcc-653ec8bd5d97/copa-mundo-clubes-logo.png"
+        },
+        {
+          "time": "14H",
+          "logo": "https://assets.decocache.com/cazetv/54531748-535e-418f-80fc-b1160f181407/copazona-logo.png",
+          "title": "Copazona",
+          "description": "direto dos Estados Unidos",
+          "isHighlighted": false
+        },
+        {
+          "time": "18H",
+          "logo": "https://assets.decocache.com/cazetv/fd533402-de48-47f4-bb8f-bc662c5ead38/eurocopa-feminina-2025-logo.png",
+          "title": "Eurocopa Feminina 2025",
+          "description": "fase de grupos",
+          "isHighlighted": false
+        },
+        {
+          "time": "20H",
+          "logo": "https://assets.decocache.com/cazetv/54531748-535e-418f-80fc-b1160f181407/copazona-logo.png",
+          "title": "Copazona",
+          "description": "direto dos Estados Unidos",
+          "isHighlighted": false
+        }
+      ],
+      "viewTableText": "ver tabela"
     },
     {
       "__resolveType": "Footer"
