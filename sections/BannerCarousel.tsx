@@ -50,7 +50,7 @@ export default function BannerCarousel({
   }
 
   return (
-    <div id={id} class={`relative w-full ${className}`}>
+    <div id={id} class={`relative w-full flex ${className}`}>
       <Slider
         rootId={id}
         interval={autoplay > 0 ? autoplay * 1000 : undefined}
