@@ -5,10 +5,10 @@ export interface Props {
   logo?: ImageWidget;
   logoWidth?: number;
   logoHeight?: number;
-  navigation?: {
-    label: string;
-    href: string;
-  }[];
+  // navigation?: {
+  //   label: string;
+  //   href: string;
+  // }[];
   socialMedia?: {
     youtube?: string;
     instagram?: string;
