@@ -116,7 +116,7 @@
       "events": [
         {
           "time": "10H",
-          "logo": "https://assets.decocache.com/cazetv/7f734a0b-ce6f-4d33-b4e7-5defed1dabdf/banner-escuro-cazetv.jpg",
+          "logo": "https://assets.decocache.com/cazetv/f09d0d30-de69-44aa-8f04-a7a5021ec804/cazetv-logo.png",
           "title": "CaféTV",
           "description": "seu reforço diário para copa do mundo de clubes",
           "isHighlighted": false
@@ -128,15 +128,15 @@
           "isHighlighted": true,
           "isLive": true,
           "teams": {
-            "team1": "https://assets.decocache.com/cazetv/036d6a04-c654-40f4-96f1-310f47c7efd4/CMC_THUMB_JOGO_AO-VIVO-1.jpg",
-            "team2": "https://assets.decocache.com/cazetv/036d6a04-c654-40f4-96f1-310f47c7efd4/CMC_THUMB_JOGO_AO-VIVO-1.jpg"
+            "team1": "https://assets.decocache.com/cazetv/37147cf5-c773-4966-8fb3-959a7e4065bd/flamengo-logo.png",
+            "team2": "https://assets.decocache.com/cazetv/25796712-7f7d-4561-860a-5f44043010d0/esperance-logo.png"
           },
           "platforms": [
             "Youtube",
             "Disney+",
             "Prime Video"
           ],
-          "logo": "https://assets.decocache.com/cazetv/aca05fcd-dfad-446f-9fcc-653ec8bd5d97/copa-mundo-clubes-logo.png"
+          "logo": "https://assets.decocache.com/cazetv/7583eeb2-1c27-4778-b378-a3c17f40a898/fcwc-logo.png"
         },
         {
           "time": "14H",
@@ -160,7 +160,8 @@
           "isHighlighted": false
         }
       ],
-      "viewTableText": "ver tabela"
+      "viewTableText": "ver tabela",
+      "backgroundImage": "https://assets.decocache.com/cazetv/8ecec3bf-4c95-49b5-9378-7470dba241f3/background-image.png"
     },
     {
       "__resolveType": "Footer"

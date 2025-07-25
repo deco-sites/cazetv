@@ -62,12 +62,32 @@ export default function BannerCarousel({
             index={index}
             class="carousel-item w-full flex-shrink-0"
           >
-            {image.href ? (
-              <a
-                href={image.href}
-                target={image.target || "_self"}
-                class="block w-full"
-              >
+            {image.href
+              ? (
+                <a
+                  href={image.href}
+                  target={image.target || "_self"}
+                  class="block w-full"
+                >
+                  <picture class="block w-full">
+                    <source
+                      media="(max-width: 767px)"
+                      srcSet={image.mobile}
+                    />
+                    <img
+                      src={image.desktop}
+                      alt={image.alt}
+                      class="w-full object-cover"
+                      style={{
+                        width: image.width || "100%",
+                        height: image.height || "400px",
+                      }}
+                      loading="lazy"
+                    />
+                  </picture>
+                </a>
+              )
+              : (
                 <picture class="block w-full">
                   <source
                     media="(max-width: 767px)"
@@ -84,25 +104,7 @@ export default function BannerCarousel({
                     loading="lazy"
                   />
                 </picture>
-              </a>
-            ) : (
-              <picture class="block w-full">
-                <source
-                  media="(max-width: 767px)"
-                  srcSet={image.mobile}
-                />
-                <img
-                  src={image.desktop}
-                  alt={image.alt}
-                  class="w-full object-cover"
-                  style={{
-                    width: image.width || "100%",
-                    height: image.height || "400px",
-                  }}
-                  loading="lazy"
-                />
-              </picture>
-            )}
+              )}
           </Slider.Item>
         ))}
       </Slider>
@@ -111,13 +113,33 @@ export default function BannerCarousel({
       {showArrows && images.length > 1 && (
         <>
           <Slider.PrevButton class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors z-10">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
           </Slider.PrevButton>
           <Slider.NextButton class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors z-10">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+              />
             </svg>
           </Slider.NextButton>
         </>

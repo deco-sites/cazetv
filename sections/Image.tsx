@@ -46,7 +46,7 @@ export default function Image({
           height={mobile?.height}
         />
       )}
-      
+
       {/* Imagem para desktop (fallback) */}
       <img
         src={desktopImage || mobileImage}

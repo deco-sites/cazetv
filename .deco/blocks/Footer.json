@@ -30,7 +30,28 @@
     "title": "Siga a CazéTV"
   },
   "platformsSection": {
-    "platforms": [],
+    "platforms": [
+      {
+        "name": "Samsung",
+        "logo": "https://assets.decocache.com/cazetv/1ff7b180-ead7-4930-822b-1aca9d58f249/Samsung_TV_Plus_2022-1.png",
+        "href": "#"
+      },
+      {
+        "name": "Disney",
+        "logo": "https://assets.decocache.com/cazetv/d7b36d33-ad34-45a8-a0f7-8b3353b2dc50/Disney_logo.svg-1.png",
+        "href": "#"
+      },
+      {
+        "name": "PrimeVideo",
+        "logo": "https://assets.decocache.com/cazetv/671f9d2f-3bef-4044-b549-7382ef796dd6/image-2.png",
+        "href": "#"
+      },
+      {
+        "name": "Sky",
+        "logo": "https://assets.decocache.com/cazetv/fcaecebf-aac0-485e-8c23-c2420a5af3ea/image-3.png",
+        "href": "#"
+      }
+    ],
     "title": "Disponível nas plataformas"
   },
   "navigation": [
