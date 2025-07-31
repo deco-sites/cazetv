@@ -20,6 +20,8 @@ export interface BannerImage {
 }
 
 export interface Props {
+  /** ID da seção */
+  id?: string;
   /** Lista de imagens do carousel */
   images?: BannerImage[];
   /** Tempo de autoplay em segundos (0 = desabilitado) */
@@ -33,13 +35,14 @@ export interface Props {
 }
 
 export default function BannerCarousel({
+  id,
   images = [],
   autoplay = 0,
   showArrows = true,
   showDots = true,
   class: className = "",
 }: Props) {
-  const id = useId();
+  const sliderId = id || useId();
 
   if (!images.length) {
     return (
@@ -50,9 +53,9 @@ export default function BannerCarousel({
   }
 
   return (
-    <div id={id} class={`relative w-full flex ${className}`}>
+    <div id={sliderId} class={`relative w-full flex ${className}`}>
       <Slider
-        rootId={id}
+        rootId={sliderId}
         interval={autoplay > 0 ? autoplay * 1000 : undefined}
         infinite={true}
         class="carousel w-full overflow-hidden"

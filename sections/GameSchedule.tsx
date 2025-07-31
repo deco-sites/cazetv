@@ -12,11 +12,13 @@ export interface Game {
 }
 
 export interface Props {
+  id?: string;
   liveGames?: Game[];
   upcomingGames?: Game[];
 }
 
 export default function GameSchedule({
+  id,
   liveGames = [
     {
       thumbnail:
@@ -44,7 +46,7 @@ export default function GameSchedule({
   ],
 }: Props) {
   const device = useDevice();
-  const isMobile = device !== "desktop";
+  const isMobile = true; //device !== "desktop";
 
   // Verificar se há jogos ao vivo para aplicar padding no primeiro próximo jogo
   const hasLiveGames = liveGames && liveGames.length > 0;
@@ -74,7 +76,7 @@ export default function GameSchedule({
       {/* Título PRÓXIMOS JOGOS para o primeiro card de próximos - apenas desktop */}
       {!isMobile && isFirstUpcoming && (
         <div class="absolute z-10" style="bottom: calc(100% + 24px); left: 0;">
-          <h2 class="text-white text-2xl font-bold">PRÓXIMOS JOGOS</h2>
+          <h2 class="text-white text-lg font-bold">PRÓXIMOS JOGOS</h2>
         </div>
       )}
 
@@ -101,10 +103,10 @@ export default function GameSchedule({
 
       {/* Informações embaixo */}
       <div class="p-4">
-        <h3 class="text-white font-bold text-3xl mb-2">
+        <h3 class="text-white font-bold text-xl mb-2">
           {game.title}
         </h3>
-        <p class="text-white text-2xl">
+        <p class="text-white text-lg">
           {game.championship}
         </p>
       </div>
@@ -115,7 +117,7 @@ export default function GameSchedule({
   const allGames = [...(liveGames || []), ...(upcomingGames || [])];
 
   return (
-    <section class="relative" style="background-color: #1F1F1F;">
+    <section id={id} class="relative" style="background-color: #1F1F1F;">
       {/* Barra superior com gradiente */}
       <div class="gradient-bar"></div>
 
@@ -195,7 +197,7 @@ export default function GameSchedule({
                 {/* PRÓXIMOS JOGOS - Mobile */}
                 {upcomingGames && upcomingGames.length > 0 && (
                   <div>
-                    <h2 class="text-white text-2xl font-bold mb-6">
+                    <h2 class="text-white text-lg font-bold mb-6">
                       PRÓXIMOS JOGOS
                     </h2>
 
@@ -354,7 +356,7 @@ export default function GameSchedule({
           /* Barra superior com gradiente */
           .gradient-bar {
             width: 100%;
-            height: 18px;
+            height: 6px;
             background: linear-gradient(90deg, #F64C68 0%, #FFB800 33.33%, #61B8E0 66.66%, #58C071 100%);
           }
           

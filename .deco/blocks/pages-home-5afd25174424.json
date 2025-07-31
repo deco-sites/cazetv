@@ -3,12 +3,11 @@
   "path": "/",
   "sections": [
     {
-      "__resolveType": "Header",
-      "logoWidth": 132,
-      "logoHeight": 74
+      "__resolveType": "Header"
     },
     {
       "__resolveType": "site/sections/BannerCarousel.tsx",
+      "id": "banner-carousel",
       "images": [
         {
           "desktop": "https://assets.decocache.com/cazetv/7f734a0b-ce6f-4d33-b4e7-5defed1dabdf/banner-escuro-cazetv.jpg",
@@ -32,6 +31,7 @@
     },
     {
       "__resolveType": "site/sections/GameSchedule.tsx",
+      "id": "jogos",
       "liveGames": [
         {
           "id": "flamengo-esperance",
@@ -60,6 +60,7 @@
     },
     {
       "__resolveType": "site/sections/Image.tsx",
+      "id": "image-section",
       "desktop": {
         "image": "https://assets.decocache.com/cazetv/c4995b62-edc5-4a24-a330-60a9c39a08c6/guarana-antartica-adbreak.jpg",
         "width": 1200,
@@ -75,6 +76,7 @@
     },
     {
       "__resolveType": "site/sections/EventsAgenda.tsx",
+      "id": "programas",
       "title": "AGENDA",
       "youtubeLink": "https://youtube.com/cazetv",
       "currentMonth": "Janeiro",

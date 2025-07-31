@@ -1,5 +1,6 @@
 import Image from "apps/website/components/Image.tsx";
 import type { ImageWidget } from "apps/admin/widgets.ts";
+import { useScript } from "@deco/deco/hooks";
 
 export interface SocialNetwork {
   name: string;
@@ -84,7 +85,7 @@ export default function Footer({
       {
         name: "Samsung TV Plus",
         logo:
-          "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA2MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjQwIiByeD0iNCIgZmlsbD0iIzAwN0RGRiIvPgo8dGV4dCB4PSIzMCIgeT0iMTYiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlNBTVNVTkc8L3RleHQ+Cjx0ZXh0IHg9IjMwIiB5PSIyNiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjYiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5UViBQbHVzPC90ZXh0Pgo8L3N2Zz4K",
+          "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA2MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjQwIiByeD0iNCIgZmlsbD0iIzAwN0RGRiIvPgo8dGV4dCB4PSIzMCIgeT0iMTYiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlNBTVNVTkc8L3RleHQ+Cjx0ZXh0IHg9IjMwIiB5PSIyNiIgZm9udC1mYW1pbHk9IkFcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI2IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VFZQbHVzPC90ZXh0Pgo8L3N2Zz4K",
         href: "#",
       },
       {
@@ -108,12 +109,13 @@ export default function Footer({
     ],
   },
   navigation = [
-    { label: "Ao vivo", href: "/ao-vivo" },
-    { label: "Todos os jogos", href: "/jogos" },
-    { label: "Todas as competições", href: "/competicoes" },
-    { label: "Todos os programas", href: "/programas" },
+    { label: "JOGOS", href: "#jogos" },
+    { label: "PROGRAMAS", href: "#programas" },
   ],
 }: Props) {
+  const networks = socialSection?.networks || [];
+  const platforms = platformsSection?.platforms || [];
+
   return (
     <footer class="relative bg-white">
       {/* Logo centralizada no topo */}
@@ -133,16 +135,16 @@ export default function Footer({
       <div class="relative z-0 overflow-clip">
         <div class="w-[500px] h-[700px] bg-[#F64C68] rotate-[-25deg] absolute top-2/3 right-40 blur-3xl [--tw-blur:blur(150px)] rounded-full z-[-1]" />
         <div class="w-[500px] h-[700px] bg-[#61B8E0] rotate-[25deg] absolute top-2/3 right-5 blur-3xl [--tw-blur:blur(150px)] rounded-full z-[-2]" />
-        <div class="container mx-auto px-4 relative pt-20 pb-10">
+        <div class="container mx-auto px-4 lg:px-10 max-w-[1600px] relative pt-20 pb-10">
           {/* Conteúdo principal do footer */}
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             {/* Seção Redes Sociais */}
             <div class="text-left">
-              <h3 class="text-gray-700 font-medium text-2xl mb-4 max-lg:text-center">
+              <h3 class="text-gray-700 font-medium text-lg mb-4 max-lg:text-center">
                 {socialSection?.title}
               </h3>
-              <div class="flex" style="gap: 57px;">
-                {socialSection?.networks?.map((network) => (
+              <div class="flex gap-4">
+                {networks.map((network) => (
                   <a
                     href={network.href}
                     target="_blank"
@@ -153,9 +155,8 @@ export default function Footer({
                     <Image
                       src={network.icon}
                       alt={network.name}
-                      width={60}
-                      height={60}
-                      class="rounded-lg"
+                      width={32}
+                      height={32}
                     />
                   </a>
                 ))}
@@ -163,11 +164,11 @@ export default function Footer({
             </div>
             {/* Seção Plataformas */}
             <div class="text-right">
-              <h3 class="text-gray-700 font-medium text-2xl mb-4 max-lg:text-center">
+              <h3 class="text-gray-700 font-medium text-lg mb-4 max-lg:text-center">
                 {platformsSection?.title}
               </h3>
               <div class="flex gap-4 justify-end">
-                {platformsSection?.platforms?.map((platform) => (
+                {platforms.map((platform) => (
                   <a
                     href={platform.href}
                     target="_blank"
@@ -191,7 +192,28 @@ export default function Footer({
               {navigation?.map((item) => (
                 <a
                   href={item.href}
-                  class="text-gray-700 hover:text-gray-900 text-2xl transition-colors font-medium"
+                  hx-on:click={useScript((href: string) => {
+                    if (!href.startsWith("#")) {
+                      return;
+                    }
+
+                    event?.preventDefault();
+
+                    const targetElement = document.getElementById(
+                      href.replace("#", ""),
+                    );
+                    if (targetElement) {
+                      const headerHeight = 80;
+                      const targetPosition = targetElement.offsetTop -
+                        headerHeight;
+
+                      globalThis.scrollTo({
+                        top: targetPosition,
+                        behavior: "smooth",
+                      });
+                    }
+                  }, item.href)}
+                  class="text-gray-700 hover:text-gray-900 text-lg transition-colors font-medium cursor-pointer"
                 >
                   {item.label}
                 </a>

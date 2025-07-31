@@ -23,12 +23,14 @@ export interface DateTab {
 }
 
 export interface Props {
+  id?: string;
   title?: string;
   backgroundImage?: ImageWidget;
   events?: Event[];
 }
 
 export default function EventsAgenda({
+  id,
   backgroundImage =
     "https://assets.decocache.com/cazetv/8ecec3bf-4c95-49b5-9378-7470dba241f3/background-image.png",
   events = [
@@ -102,12 +104,13 @@ export default function EventsAgenda({
   const filterId = useId();
 
   return (
-    <div class="w-full bg-gray-50 min-h-screen">
+    <div id={id} class="w-full bg-gray-50 min-h-screen overflow-x-clip">
       <div class="container py-8 px-4" id={sliderId}>
         {/* Header */}
         <div class="flex gap-3 justify-center items-center mb-8 relative">
-          <h1 class="text-2xl font-bold text-black tracking-wider">AGENDA</h1>
-          <p class="text-gray-600 hover:text-black flex items-center gap-2 text-sm">
+          <h1 class="text-lg font-bold text-black tracking-wider">AGENDA</h1>
+          {
+            /* <p class="text-gray-600 hover:text-black flex items-center gap-2 text-sm">
             <span className="font-bold">Youtube</span>
             <svg
               class="w-4 h-4"
@@ -122,7 +125,8 @@ export default function EventsAgenda({
                 d="M19 9l-7 7-7-7"
               />
             </svg>
-          </p>
+          </p> */
+          }
         </div>
 
         {/* Month and Back to Today */}
@@ -163,7 +167,7 @@ export default function EventsAgenda({
                 >
                   <button
                     key={index}
-                    class={`px-4 py-2 border-[3px] text-2xl w-full transition-all ${
+                    class={`px-4 py-2 border-[3px] text-lg w-full transition-all ${
                       tab.isActive
                         ? "border-black text-black font-bold"
                         : "text-gray-600 border-gray-600 hover:border-black hover:text-black"
@@ -197,9 +201,9 @@ export default function EventsAgenda({
               <input type="checkbox" id={filterId} class="hidden peer" />
               <label
                 for={filterId}
-                class="flex items-center gap-2 cursor-pointer text-2xl peer-checked:[&>svg]:rotate-180"
+                class="flex items-center gap-2 cursor-pointer text-lg peer-checked:[&>svg]:rotate-180"
               >
-                Filtrar por tipo de evento{" "}
+                Filtrar por plataforma{" "}
                 <svg
                   class="size-5 text-black"
                   fill="currentColor"
@@ -212,7 +216,7 @@ export default function EventsAgenda({
                   />
                 </svg>
               </label>
-              <p class="text-2xl text-gray-500">Tudo</p>
+              <p class="text-lg text-gray-500">Youtube</p>
               {
                 /* <select class="appearance-none bg-white border border-gray-300 rounded px-4 py-2 pr-8 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-black focus:border-black min-w-56">
                 <option>Tudo</option>
@@ -239,9 +243,14 @@ export default function EventsAgenda({
         </div>
 
         {/* Events List */}
-        <div class="space-y-6">
+        <div>
           {events.map((event, index) => (
-            <div key={index}>
+            <div
+              key={index + event.title}
+              class={event.isLive
+                ? ""
+                : "even:bg-[#EFEFEF] relative even:after:bg-[#efefef] after:pointer-events-none after:left-1/2 after:-translate-x-1/2 after:w-screen after:flex after:absolute after:h-full after:top-0 z-0 after:z-[-1]"}
+            >
               {event.isLive
                 ? (
                   /* Highlighted Event - Dark Section */
@@ -273,7 +282,7 @@ export default function EventsAgenda({
                             />
                           </div>
                           <div>
-                            <h3 class="text-white text-2xl font-bold mb-1">
+                            <h3 class="text-white text-lg font-bold mb-1">
                               {event.title}
                             </h3>
                             <p class="text-gray-300 text-sm">
@@ -296,7 +305,7 @@ export default function EventsAgenda({
                                       class="w-auto h-28 object-contain"
                                     />
                                   )}
-                                  <span class="text-white text-2xl font-bold">
+                                  <span class="text-white text-lg font-bold">
                                     X
                                   </span>
                                   {event.teams.team2 && (
@@ -336,7 +345,7 @@ export default function EventsAgenda({
                         <div class="mt-6">
                           <a
                             href={event.link || "#"}
-                            class="text-white hover:text-yellow-400 text-2xl flex items-center gap-1 font-medium"
+                            class="text-white hover:text-yellow-400 text-lg flex items-center gap-1 font-medium"
                           >
                             ver tabela
                             <svg
@@ -360,10 +369,10 @@ export default function EventsAgenda({
                 )
                 : (
                   /* Regular Event */
-                  <div class="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-6 py-4">
+                  <div class="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-6 py-4 lg:py-6">
                     {/* Time */}
                     <div class="flex-shrink-0 w-16 lg:ml-16">
-                      <div class="text-2xl font-bold text-black">
+                      <div class="text-lg font-bold text-black">
                         {event.time}
                       </div>
                     </div>
@@ -380,10 +389,10 @@ export default function EventsAgenda({
                       </div>
                       {/* Content */}
                       <div class="flex-1">
-                        <h3 class="text-3xl font-bold text-black mb-1">
+                        <h3 class="text-xl font-bold text-black mb-1">
                           {event.title}
                         </h3>
-                        <p class="text-gray-600 text-2xl">
+                        <p class="text-gray-600 text-lg">
                           {event.description}
                         </p>
                       </div>

@@ -84,7 +84,7 @@ export default function BlogPosts({
               <div class="p-6 space-y-4">
                 <div class="font-semibold">{post.readingTime}</div>
                 <div class="space-y-2">
-                  <h3 class="text-2xl">{post.title}</h3>
+                  <h3 class="text-lg">{post.title}</h3>
                   <p class="text-base">{post.excerpt}</p>
                 </div>
                 <div class="flex flex-wrap gap-2">

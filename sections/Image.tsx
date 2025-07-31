@@ -10,6 +10,8 @@ interface ImageConfig {
 }
 
 export interface Props {
+  /** ID da seção */
+  id?: string;
   /** Configuração da imagem para desktop */
   desktop?: ImageConfig;
   /** Configuração da imagem para mobile */
@@ -21,6 +23,7 @@ export interface Props {
 }
 
 export default function Image({
+  id,
   desktop,
   mobile,
   alt = "",
@@ -36,27 +39,28 @@ export default function Image({
   const mobileImage = mobile?.image || desktopImage;
 
   return (
-    <picture>
-      {/* Imagem para mobile */}
-      {mobileImage && (
-        <source
-          media="(max-width: 767px)"
-          srcSet={mobileImage}
-          width={mobile?.width}
-          height={mobile?.height}
-        />
-      )}
+    <div id={id}>
+      <picture>
+        {/* Imagem para mobile */}
+        {mobileImage && (
+          <source
+            media="(max-width: 767px)"
+            srcSet={mobileImage}
+            width={mobile?.width}
+            height={mobile?.height}
+          />
+        )}
 
-      {/* Imagem para desktop (fallback) */}
-      <img
-        src={desktopImage || mobileImage}
-        alt={alt}
-        width={desktop?.width || mobile?.width}
-        height={desktop?.height || mobile?.height}
-        loading={preload ? "eager" : "lazy"}
-        fetchPriority={preload ? "high" : "auto"}
-        class="w-full h-auto"
-      />
-    </picture>
+        {/* Imagem para desktop (fallback) */}
+        <img
+          src={desktopImage || mobileImage}
+          alt={alt}
+          width={desktop?.width || mobile?.width}
+          height={desktop?.height || mobile?.height}
+          loading={preload ? "eager" : "lazy"}
+          class="w-full h-auto"
+        />
+      </picture>
+    </div>
   );
 }

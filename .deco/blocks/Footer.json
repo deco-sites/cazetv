@@ -56,20 +56,12 @@
   },
   "navigation": [
     {
-      "label": "Ao vivo",
-      "href": "#"
+      "label": "JOGOS",
+      "href": "#jogos"
     },
     {
-      "label": "Todos os jogos",
-      "href": "#"
-    },
-    {
-      "label": "Todas as competições",
-      "href": "#"
-    },
-    {
-      "label": "Todos os programas",
-      "href": "#"
+      "label": "PROGRAMAS",
+      "href": "#programas"
     }
   ],
   "centerLogo": {
