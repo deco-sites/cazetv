@@ -33,6 +33,21 @@
   },
   "youtubeAPIKey": {
     "__resolveType": "website/loaders/secret.ts",
-    "name": "YOUTUBE_API_KEY"
-  }
+    "name": "YOUTUBE_API_KEY",
+    "encrypted": "01ae18a392712a0575ae87001e90d7e60c5b80725573a925c1f9598789399fbc1a2f88443b1c718c9d11693587006afe"
+  },
+  "abTesting": {
+    "replaces": [],
+    "includeScriptsToHead": {
+      "includes": []
+    },
+    "includeScriptsToBody": {
+      "includes": []
+    }
+  },
+  "flavor": {
+    "framework": "htmx"
+  },
+  "whilelistURLs": [],
+  "whitelistPatterns": []
 }
