@@ -5,8 +5,11 @@ export interface Props {
   scroll?: "smooth" | "auto";
   interval?: number;
   infinite?: boolean;
+  startIndex?: number;
 }
-const setup = ({ rootId, scroll, interval, infinite }: Props) => {
+const setup = (
+  { rootId, scroll, interval, infinite, startIndex = 0 }: Props,
+) => {
   const ATTRIBUTES = {
     "data-slider": "data-slider",
     "data-slider-item": "data-slider-item",
@@ -63,7 +66,7 @@ const setup = ({ rootId, scroll, interval, infinite }: Props) => {
     }
     return indices;
   };
-  const goToItem = (index: number) => {
+  const goToItem = (index: number, _scroll?: "smooth" | "auto" | "instant") => {
     const item = items.item(index);
     if (!isHTMLElement(item)) {
       console.warn(
@@ -73,7 +76,7 @@ const setup = ({ rootId, scroll, interval, infinite }: Props) => {
     }
     slider.scrollTo({
       top: 0,
-      behavior: scroll,
+      behavior: _scroll ?? scroll,
       left: item.offsetLeft - root.offsetLeft,
     });
   };
@@ -131,6 +134,8 @@ const setup = ({ rootId, scroll, interval, infinite }: Props) => {
   prev?.addEventListener("click", onClickPrev);
   next?.addEventListener("click", onClickNext);
   const timeout = interval && setInterval(onClickNext, interval);
+
+  goToItem(startIndex, "instant");
   // Unregister callbacks
   return () => {
     for (let it = 0; it < (dots?.length ?? 0); it++) {
@@ -143,7 +148,14 @@ const setup = ({ rootId, scroll, interval, infinite }: Props) => {
   };
 };
 function Slider(
-  { rootId, scroll = "smooth", interval, infinite = false, ...props }:
+  {
+    rootId,
+    scroll = "smooth",
+    interval,
+    infinite = false,
+    startIndex = 0,
+    ...props
+  }:
     & JSX.IntrinsicElements["ul"]
     & Props,
 ) {
@@ -153,7 +165,13 @@ function Slider(
       <script
         type="module"
         dangerouslySetInnerHTML={{
-          __html: useScript(setup, { rootId, scroll, interval, infinite }),
+          __html: useScript(setup, {
+            rootId,
+            scroll,
+            interval,
+            infinite,
+            startIndex,
+          }),
         }}
       />
     </>

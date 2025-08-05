@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS `eventos` (
+	`id` text PRIMARY KEY NOT NULL,
+	`nome_campeonato` text,
+	`logo_campeonato_url` text,
+	`rodada` text,
+	`data_jogo` text,
+	`data_jogo_formatada` text,
+	`horario` text,
+	`nome_time_mandante` text,
+	`nome_time_visitante` text,
+	`logo_time_mandante_url` text,
+	`logo_time_visitante_url` text,
+	`hero_art_url` text,
+	`plataformas_nomes` text,
+	`status` text,
+	`titulo_evento` text,
+	`descricao` text,
+	`created_time` text,
+	`last_modified` text
+);

@@ -1,107 +1,334 @@
-import type { ImageWidget } from "apps/admin/widgets.ts";
+// deno-lint-ignore-file
+import type { SectionProps } from "@deco/deco";
+import { useScript, useSection } from "@deco/deco/hooks";
+import { dayOfYear } from "https://deno.land/std@0.224.0/datetime/day_of_year.ts";
+import type { Event } from "site/loaders/database/listEvents.ts";
+import { AppContext } from "../apps/site.ts";
 import Slider from "../components/ui/Slider.tsx";
 import { useId } from "../sdk/useId.ts";
 
-export interface Event {
-  time: string;
-  logo?: ImageWidget;
-  title: string;
-  description: string;
-  isLive?: boolean;
-  platforms?: string[];
-  link?: string;
-  teams?: {
-    team1?: ImageWidget;
-    team2?: ImageWidget;
-  };
-}
-
 export interface DateTab {
+  key: string;
   label: string;
   value: string;
   isActive?: boolean;
+  dateISO?: string;
 }
 
 export interface Props {
   id?: string;
   title?: string;
-  backgroundImage?: ImageWidget;
-  events?: Event[];
+  /**
+   * @ignore
+   */
+  selectedDate?: string;
+  /**
+   * @ignore
+   */
+  eventListId?: string;
+}
+
+export async function loader(props: Props, _req: Request, ctx: AppContext) {
+  const { events } = await ctx.invoke.site.loaders.database.listEvents();
+
+  return {
+    ...props,
+    events,
+  };
+}
+
+function EventList({
+  events,
+  eventListId,
+}: {
+  events: (Event & { is_live: boolean })[];
+  eventListId: string;
+}) {
+  return (
+    <div id={eventListId}>
+      {events.length > 0
+        ? events.map((event, index) => (
+          <div
+            key={index + (event.titulo_evento || "")}
+            class={event.is_live
+              ? ""
+              : "even:bg-[#EFEFEF] relative even:after:bg-[#efefef] after:pointer-events-none after:left-1/2 after:-translate-x-1/2 after:w-screen after:flex after:absolute after:h-full after:top-0 z-0 after:z-[-1]"}
+          >
+            {event.is_live
+              ? (
+                /* Highlighted Event - Dark Section */
+                <div class="relative bg-black rounded-lg overflow-hidden">
+                  {/* Background Pattern */}
+                  <img
+                    src={event.hero_art_url || ""}
+                    alt="Background Pattern"
+                    class="absolute inset-0 w-full h-full object-cover"
+                  />
+
+                  <div class="relative z-10 p-8">
+                    {/* Left side - AGORA text */}
+                    <div class="max-lg:w-full max-lg:text-center max-lg:mb-5 lg:absolute lg:top-1/2 lg:transform lg:-translate-y-1/2 lg:-rotate-90 lg:-left-6">
+                      <span class="text-white text-5xl font-bold tracking-widest">
+                        AGORA
+                      </span>
+                    </div>
+
+                    {/* Main content */}
+                    <div class="lg:ml-28">
+                      {/* Event info */}
+                      <div class="mb-6 flex gap-5 lg:gap-10">
+                        <div class="flex items-center gap-4 mb-2">
+                          <img
+                            src={event.logo_campeonato_url || ""}
+                            alt="Tournament Logo"
+                            class="w-auto h-20 object-contain"
+                          />
+                        </div>
+                        <div>
+                          <h3 class="text-white text-lg font-bold mb-1">
+                            {event.nome_campeonato}
+                          </h3>
+                          <p class="text-gray-300 text-sm">
+                            {event.rodada}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div class="bg-[#F7F7F726] w-fit px-5 pt-12 lg:px-9 pb-5 lg:pt-10 relative">
+                        {/* Teams and Live badge */}
+                        <div class="flex items-center justify-between">
+                          <div class="flex items-center gap-6">
+                            {/* Teams */}
+                            {event.nome_time_mandante && (
+                              <div class="flex items-center gap-4">
+                                {event.nome_time_mandante && (
+                                  <img
+                                    src={event.logo_time_mandante_url || ""}
+                                    alt="Team 1"
+                                    class="w-auto h-28 object-contain"
+                                  />
+                                )}
+                                <span class="text-white text-lg font-bold">
+                                  X
+                                </span>
+                                {event.nome_time_visitante && (
+                                  <img
+                                    src={event.logo_time_visitante_url ||
+                                      ""}
+                                    alt="Team 2"
+                                    class="w-auto h-28 object-contain"
+                                  />
+                                )}
+                              </div>
+                            )}
+                            {/* Live Badge */}
+                            <span class="bg-[#FC3C73] text-white text-xs font-bold px-3 py-1 rounded-full absolute top-5 right-5">
+                              AO VIVO
+                            </span>
+                          </div>
+                        </div>
+                        {/* Platforms */}
+                        {event.plataformas_nomes && (
+                          <div class="flex gap-3 flex-wrap lg:gap-2 mt-4">
+                            {event.plataformas_nomes?.split(",").map((
+                              platform,
+                              platformIndex,
+                            ) => (
+                              <span
+                                key={platformIndex}
+                                class="text-white lg:px-3 lg:py-1 font-medium"
+                              >
+                                {platform.trim()}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* View Table Link */}
+                      <div class="mt-6">
+                        <a
+                          href="#"
+                          class="text-white hover:text-yellow-400 text-lg flex items-center gap-1 font-medium"
+                        >
+                          ver tabela
+                          <svg
+                            class="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )
+              : (
+                /* Regular Event */
+                <div class="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-6 py-4 lg:py-6">
+                  {/* Time */}
+                  <div class="flex-shrink-0 w-16 lg:ml-16">
+                    <div class="text-lg font-bold text-black">
+                      {event.horario}
+                    </div>
+                  </div>
+                  {/* Logo */}
+                  <div class="flex gap-6 items-center">
+                    <div class="flex-shrink-0 w-24 flex justify-center items-center">
+                      {event.logo_campeonato_url && (
+                        <img
+                          src={event.logo_campeonato_url}
+                          alt={event.nome_campeonato || ""}
+                          class="h-12 w-auto object-contain"
+                        />
+                      )}
+                    </div>
+                    {/* Content */}
+                    <div class="flex-1">
+                      <h3 class="text-xl font-bold text-black mb-1">
+                        {event.nome_campeonato}
+                      </h3>
+                      <p class="text-gray-600 text-lg">
+                        {event.rodada}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+          </div>
+        ))
+        : (
+          <div class="text-center text-lg mt-10 font-bold text-gray-500">
+            Nenhum evento encontrado
+          </div>
+        )}
+    </div>
+  );
 }
 
 export default function EventsAgenda({
   id,
-  backgroundImage =
-    "https://assets.decocache.com/cazetv/8ecec3bf-4c95-49b5-9378-7470dba241f3/background-image.png",
-  events = [
-    {
-      time: "10H",
-      logo:
-        "https://assets.decocache.com/cazetv/f09d0d30-de69-44aa-8f04-a7a5021ec804/cazetv-logo.png",
-      title: "CaféTV",
-      description: "seu reforço diário para copa do mundo de clubes",
-    },
-    {
-      time: "AGORA",
-      title: "Copa do Mundo de Clubes",
-      description: "semifinal",
-      isLive: true,
-      teams: {
-        team1:
-          "https://assets.decocache.com/cazetv/37147cf5-c773-4966-8fb3-959a7e4065bd/flamengo-logo.png",
-        team2:
-          "https://assets.decocache.com/cazetv/25796712-7f7d-4561-860a-5f44043010d0/esperance-logo.png",
-      },
-      platforms: ["Youtube", "Disney+", "Prime Video"],
-    },
-    {
-      time: "14H",
-      logo:
-        "https://assets.decocache.com/cazetv/7583eeb2-1c27-4778-b378-a3c17f40a898/fcwc-logo.png",
-      title: "Copazona",
-      description: "direto dos Estados Unidos",
-    },
-    {
-      time: "18H",
-      logo:
-        "https://assets.decocache.com/cazetv/7583eeb2-1c27-4778-b378-a3c17f40a898/fcwc-logo.png",
-      title: "Eurocopa Feminina 2025",
-      description: "fase de grupos",
-    },
-    {
-      time: "20H",
-      logo:
-        "https://assets.decocache.com/cazetv/7583eeb2-1c27-4778-b378-a3c17f40a898/fcwc-logo.png",
-      title: "Copazona",
-      description: "direto dos Estados Unidos",
-    },
-  ],
-}: Props) {
+  events: _events,
+  selectedDate,
+  eventListId: _eventListId,
+}: SectionProps<typeof loader>) {
   const now = new Date();
   const currentDate = now.getDate();
   const currentMonth = now.toLocaleString("pt-BR", { month: "long" });
-  const dateStr = ["dom", "seg", "ter", "qua", "qui", "sex", "sab", "dom"];
-  const dateTabs = Array.from({ length: 10 }, (_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - (2 - i));
-    const isToday = date.getDate() === currentDate;
-    const isTomorrow = date.getDate() === currentDate + 1;
-    const isYesterday = date.getDate() === currentDate - 1;
+  const dateStr = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb", "dom"];
+  const firstDate = new Date(
+    _events.find((e) => e.data_jogo)?.data_jogo || "",
+  );
+  const lastDate = new Date(
+    _events.findLast((e) => e.data_jogo)?.data_jogo || "",
+  );
+  const count = dayOfYear(lastDate) - dayOfYear(firstDate);
+
+  // const dateTabs = events.reduce<DateTab[]>((acc, event) => {
+  //   if (!event.data_jogo) return acc;
+  //   const date = new Date(event.data_jogo);
+  //   const day = date.getDate();
+  //   const month = date.getMonth();
+  //   const year = date.getFullYear();
+  //   const dateKey = `${year}-${month}-${day}`;
+  //   const sameYear = year === now.getFullYear();
+  //   const sameMonth = month === now.getMonth();
+  //   const isToday = date.getDate() === currentDate && sameMonth && sameYear;
+  //   const isTomorrow = date.getDate() === currentDate + 1 && sameMonth &&
+  //     sameYear;
+  //   const isYesterday = date.getDate() === currentDate - 1 && sameMonth &&
+  //     sameYear;
+  //   if (!acc.find((tab) => tab.key === dateKey)) {
+  //     acc.push({
+  //       key: dateKey,
+  //       label: isYesterday
+  //         ? "Ontem"
+  //         : isToday
+  //         ? "Hoje"
+  //         : isTomorrow
+  //         ? "Amanhã"
+  //         : date.toLocaleString("pt-BR", { dateStyle: "short" }),
+  //       value: isToday || isTomorrow || isYesterday
+  //         ? ""
+  //         : dateStr[date.getDay()],
+  //       isActive: isToday,
+  //     });
+  //   }
+  //   return acc;
+  // }, []);
+  const getDateKey = (date: Date) => {
+    const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    return `${year}-${month}-${day}`;
+  };
+  const dateTabs = Array.from({ length: count }, (_, i) => {
+    const date = new Date(firstDate);
+    date.setDate(date.getDate() + i);
+    const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    const dateKey = getDateKey(date);
+    const sameYear = year === now.getFullYear();
+    const sameMonth = month === now.getMonth();
+    const isToday = day === currentDate && sameMonth && sameYear;
+    const isTomorrow = day === currentDate + 1 && sameMonth &&
+      sameYear;
+    const isYesterday = day === currentDate - 1 && sameMonth &&
+      sameYear;
+    const selectedDateKey = selectedDate
+      ? getDateKey(new Date(selectedDate))
+      : null;
     return {
+      key: dateKey,
       label: isYesterday
         ? "Ontem"
         : isToday
         ? "Hoje"
         : isTomorrow
         ? "Amanhã"
-        : date.toLocaleString("pt-BR", { day: "2-digit" }),
+        : date.toLocaleString("pt-BR", { day: "2-digit", month: "2-digit" }),
       value: isYesterday || isToday || isTomorrow ? "" : dateStr[date.getDay()],
-      isActive: isToday,
+      isActive: selectedDate ? selectedDateKey === dateKey : isToday,
+      dateISO: date.toISOString(),
     };
   });
 
+  const todayIndex = dateTabs.findIndex((tab) =>
+    tab.key === getDateKey(new Date())
+  );
+
   const sliderId = useId();
   const filterId = useId();
+
+  const currentDayOfYear = dayOfYear(
+    selectedDate ? new Date(selectedDate) : new Date(),
+  );
+  const events = _events.filter((event) => {
+    if (!event.data_jogo) return false;
+    const date = new Date(event.data_jogo || "");
+    return dayOfYear(date) === currentDayOfYear;
+  }).map((event) => ({
+    ...event,
+    is_live: event.data_finalizacao && event.data_jogo
+      ? new Date(event.data_finalizacao) < new Date() &&
+        new Date() < new Date(event.data_jogo)
+      : false,
+  }));
+
+  if (_eventListId) {
+    return <EventList events={events} eventListId={_eventListId} />;
+  }
+
+  const eventListId = useId();
 
   return (
     <div id={id} class="w-full bg-gray-50 min-h-screen overflow-x-clip">
@@ -133,11 +360,18 @@ export default function EventsAgenda({
         <div class="flex items-center gap-4 mb-6">
           <span class="text-black font-medium text-lg">{currentMonth}</span>
           <span class="text-gray-400">•</span>
-          <Slider.Dot index={2}>
+          <button
+            type="button"
+            hx-get={useSection({
+              props: { selectedDate: new Date().toISOString() },
+            })}
+            hx-target="closest section"
+            hx-swap="outerHTML"
+          >
             <span class="text-gray-600 hover:text-black text-sm">
               Voltar para hoje
             </span>
-          </Slider.Dot>
+          </button>
         </div>
 
         <div class="flex flex-col lg:flex-row justify-between gap-3 items-center">
@@ -158,20 +392,45 @@ export default function EventsAgenda({
                 />
               </svg>
             </Slider.PrevButton>
-            <Slider rootId={sliderId} class="carousel gap-2">
+            <Slider
+              rootId={sliderId}
+              class="carousel gap-2"
+              startIndex={Math.max(0, todayIndex - 2)}
+            >
               {dateTabs.map((tab, index) => (
                 <Slider.Item
                   class="w-36 carousel-item"
                   index={index}
-                  key={index}
+                  key={tab.key}
                 >
                   <button
+                    hx-get={useSection({
+                      props: {
+                        selectedDate: tab.dateISO,
+                        eventListId,
+                      },
+                    })}
+                    hx-target={`#${eventListId}`}
+                    hx-swap="outerHTML"
+                    hx-on:click={useScript((rootId: string) => {
+                      const root = document.getElementById(rootId);
+                      if (!root) return;
+
+                      const activeButtons = root.querySelectorAll(
+                        "[data-active=true]",
+                      );
+                      activeButtons.forEach((button) => {
+                        // @ts-ignore - ignore
+                        button.setAttribute("data-active", "false");
+                      });
+
+                      // @ts-ignore - ignore
+                      const self = this as unknown as HTMLButtonElement;
+                      self.setAttribute("data-active", "true");
+                    }, sliderId)}
+                    data-active={tab.isActive}
                     key={index}
-                    class={`px-4 py-2 border-[3px] text-lg w-full transition-all ${
-                      tab.isActive
-                        ? "border-black text-black font-bold"
-                        : "text-gray-600 border-gray-600 hover:border-black hover:text-black"
-                    }`}
+                    class="px-4 py-2 border-[3px] text-lg w-full transition-all text-gray-600 border-gray-400 hover:border-black hover:text-black data-[active=true]:border-black data-[active=true]:text-black data-[active=true]:font-bold"
                   >
                     {tab.label}
                     {tab.value && <span class="ml-1">| {tab.value}</span>}
@@ -243,165 +502,7 @@ export default function EventsAgenda({
         </div>
 
         {/* Events List */}
-        <div>
-          {events.map((event, index) => (
-            <div
-              key={index + event.title}
-              class={event.isLive
-                ? ""
-                : "even:bg-[#EFEFEF] relative even:after:bg-[#efefef] after:pointer-events-none after:left-1/2 after:-translate-x-1/2 after:w-screen after:flex after:absolute after:h-full after:top-0 z-0 after:z-[-1]"}
-            >
-              {event.isLive
-                ? (
-                  /* Highlighted Event - Dark Section */
-                  <div class="relative bg-black rounded-lg overflow-hidden">
-                    {/* Background Pattern */}
-                    <img
-                      src={backgroundImage}
-                      alt="Background Pattern"
-                      class="absolute inset-0 w-full h-full object-cover"
-                    />
-
-                    <div class="relative z-10 p-8">
-                      {/* Left side - AGORA text */}
-                      <div class="max-lg:w-full max-lg:text-center max-lg:mb-5 lg:absolute lg:top-1/2 lg:transform lg:-translate-y-1/2 lg:-rotate-90 lg:-left-6">
-                        <span class="text-white text-5xl font-bold tracking-widest">
-                          AGORA
-                        </span>
-                      </div>
-
-                      {/* Main content */}
-                      <div class="lg:ml-28">
-                        {/* Event info */}
-                        <div class="mb-6 flex gap-5 lg:gap-10">
-                          <div class="flex items-center gap-4 mb-2">
-                            <img
-                              src={event.logo}
-                              alt="Tournament Logo"
-                              class="w-auto h-20 object-contain"
-                            />
-                          </div>
-                          <div>
-                            <h3 class="text-white text-lg font-bold mb-1">
-                              {event.title}
-                            </h3>
-                            <p class="text-gray-300 text-sm">
-                              {event.description}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div class="bg-[#F7F7F726] w-fit px-5 pt-12 lg:px-9 pb-5 lg:pt-10 relative">
-                          {/* Teams and Live badge */}
-                          <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-6">
-                              {/* Teams */}
-                              {event.teams && (
-                                <div class="flex items-center gap-4">
-                                  {event.teams.team1 && (
-                                    <img
-                                      src={event.teams.team1}
-                                      alt="Team 1"
-                                      class="w-auto h-28 object-contain"
-                                    />
-                                  )}
-                                  <span class="text-white text-lg font-bold">
-                                    X
-                                  </span>
-                                  {event.teams.team2 && (
-                                    <img
-                                      src={event.teams.team2}
-                                      alt="Team 2"
-                                      class="w-auto h-28 object-contain"
-                                    />
-                                  )}
-                                </div>
-                              )}
-                              {/* Live Badge */}
-                              <span class="bg-[#FC3C73] text-white text-xs font-bold px-3 py-1 rounded-full absolute top-5 right-5">
-                                AO VIVO
-                              </span>
-                            </div>
-                          </div>
-                          {/* Platforms */}
-                          {event.platforms && (
-                            <div class="flex gap-3 flex-wrap lg:gap-2 mt-4">
-                              {event.platforms.map((
-                                platform,
-                                platformIndex,
-                              ) => (
-                                <span
-                                  key={platformIndex}
-                                  class="text-white lg:px-3 lg:py-1 font-medium"
-                                >
-                                  {platform}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-
-                        {/* View Table Link */}
-                        <div class="mt-6">
-                          <a
-                            href={event.link || "#"}
-                            class="text-white hover:text-yellow-400 text-lg flex items-center gap-1 font-medium"
-                          >
-                            ver tabela
-                            <svg
-                              class="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M9 5l7 7-7 7"
-                              />
-                            </svg>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )
-                : (
-                  /* Regular Event */
-                  <div class="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-6 py-4 lg:py-6">
-                    {/* Time */}
-                    <div class="flex-shrink-0 w-16 lg:ml-16">
-                      <div class="text-lg font-bold text-black">
-                        {event.time}
-                      </div>
-                    </div>
-                    {/* Logo */}
-                    <div class="flex gap-6 items-center">
-                      <div class="flex-shrink-0 w-24 flex justify-center items-center">
-                        {event.logo && (
-                          <img
-                            src={event.logo}
-                            alt={event.title}
-                            class="h-12 w-auto object-contain"
-                          />
-                        )}
-                      </div>
-                      {/* Content */}
-                      <div class="flex-1">
-                        <h3 class="text-xl font-bold text-black mb-1">
-                          {event.title}
-                        </h3>
-                        <p class="text-gray-600 text-lg">
-                          {event.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-            </div>
-          ))}
-        </div>
+        <EventList events={events} eventListId={eventListId} />
       </div>
     </div>
   );

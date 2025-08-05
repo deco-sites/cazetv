@@ -4,16 +4,20 @@ import website, { type Props as WebsiteProps } from "apps/website/mod.ts";
 import manifest, { Manifest } from "../manifest.gen.ts";
 import { createHttpClient } from "apps/utils/http.ts";
 import { YoutubeAPI } from "../sdk/apps/youtube.ts";
+import { default as drizzle } from "site/apps/deco/records.ts";
 
 type WebsiteApp = ReturnType<typeof website>;
+type DrizzleApp = ReturnType<typeof drizzle>;
 
 interface Props extends WebsiteProps {
   youtubeAPIKey: Secret;
+  passPhrase: Secret;
 }
 
 interface State {
   youtube: ReturnType<typeof createHttpClient<YoutubeAPI>>;
   youtubeAPIKey: Secret;
+  passPhrase: Secret;
 }
 
 /**
@@ -24,11 +28,8 @@ interface State {
  */
 export default function Site(state: Props): App<Manifest, State, [
   WebsiteApp,
+  DrizzleApp,
 ]> {
-  console.log({
-    youtubeAPIKey: state.youtubeAPIKey?.get(),
-  });
-
   const headers = new Headers();
   headers.set("Authorization", `${state.youtubeAPIKey?.get()}`);
 
@@ -41,8 +42,10 @@ export default function Site(state: Props): App<Manifest, State, [
     state: {
       youtube,
       youtubeAPIKey: state.youtubeAPIKey,
+      passPhrase: state.passPhrase,
     },
     manifest,
+    // @ts-ignore drizzle will be injected by deco runtime
     dependencies: [
       website(state),
     ],

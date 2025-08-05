@@ -2,11 +2,13 @@
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running `dev.ts`.
 
+import * as $$$$$$$$$0 from "./actions/database/updateData.ts";
 import * as $$$$$$$$$$$0 from "./apps/deco/blog.ts";
 import * as $$$$$$$$$$$1 from "./apps/deco/htmx.ts";
 import * as $$$$$$$$$$$2 from "./apps/deco/records.ts";
 import * as $$$$$$$$$$$3 from "./apps/site.ts";
-import * as $$$0 from "./loaders/youtube/lives.ts";
+import * as $$$0 from "./loaders/database/listEvents.ts";
+import * as $$$1 from "./loaders/youtube/lives.ts";
 import * as $$$$$$0 from "./sections/BannerCarousel.tsx";
 import * as $$$$$$1 from "./sections/BlogPosts.tsx";
 import * as $$$$$$2 from "./sections/EventsAgenda.tsx";
@@ -26,7 +28,8 @@ import * as $$$$$$12 from "./sections/Theme/Theme.tsx";
 
 const manifest = {
   "loaders": {
-    "site/loaders/youtube/lives.ts": $$$0,
+    "site/loaders/database/listEvents.ts": $$$0,
+    "site/loaders/youtube/lives.ts": $$$1,
   },
   "sections": {
     "site/sections/BannerCarousel.tsx": $$$$$$0,
@@ -45,6 +48,9 @@ const manifest = {
     "site/sections/Logos.tsx": $$$$$$10,
     "site/sections/Testimonials.tsx": $$$$$$11,
     "site/sections/Theme/Theme.tsx": $$$$$$12,
+  },
+  "actions": {
+    "site/actions/database/updateData.ts": $$$$$$$$$0,
   },
   "apps": {
     "site/apps/deco/blog.ts": $$$$$$$$$$$0,

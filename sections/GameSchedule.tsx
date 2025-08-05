@@ -20,6 +20,10 @@ export default function GameSchedule({
   id,
   lives,
 }: SectionProps<typeof loader>) {
+  if (lives.live.length === 0 && lives.upcoming.length === 0) {
+    return null;
+  }
+
   const GameCard = ({ game }: { game: Video }) => (
     <a
       href={`https://www.youtube.com/watch?v=${game.id}`}
