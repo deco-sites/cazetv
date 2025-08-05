@@ -1,0 +1,9 @@
+{
+  "__resolveType": "site/apps/deco/records.ts",
+  "url": "libsql://cazetv-decocx.turso.io",
+  "authToken": {
+    "__resolveType": "website/loaders/secret.ts",
+    "name": "DATABASE_AUTH_TOKEN",
+    "encrypted": "82d563a102af4d4f3829b7fe176734ee8b1666ac6af048c9f35eee889bcd9d3bc19dd4e827c0027965956ffad81bac257481ee327bb1972987350293f690ae2aa01e59e125242f183917ab9232d04e647563f584dc5634c07db4138a7f2fe681fe505b285d542bbe4784d6e91bd2eecb87b2abdd9976e21317597d354c26e61326dc15fb48fe8e9658b534ee4c06f03dac48240ac2cec54e6df0f17b4dd0d05d762cda079322d5e5e2db0184c20e55079d77b5fc07619e591ea3ac06fcdceda47a4e24f2423a9a042bf698c4ba66f586e25cb8be95d684ae6c35b1fcbe5d4766"
+  }
+}

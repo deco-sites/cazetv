@@ -88,3 +88,4 @@ static/tailwind.css
 
 .deco/decofile.json
 ignore/*
+sqlite.db
