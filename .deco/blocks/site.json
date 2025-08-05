@@ -13,6 +13,12 @@
   "global": [
     {
       "__resolveType": "htmx/sections/htmx.tsx"
+    },
+    {
+      "apiKey": "phc_dAJiUYJH3KRwno7cON6pgdrGrU4nJ7ZWpCTzULWtqk8",
+      "apiHost": "https://us.i.posthog.com",
+      "defaults": "2025-05-24",
+      "__resolveType": "site/sections/Posthog.tsx"
     }
   ],
   "routes": [
