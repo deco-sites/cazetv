@@ -1,3 +1,4 @@
+import { logger } from "@deco/deco/o11y";
 import type { AppContext } from "../../apps/site.ts";
 import type { Video, YoutubeAPI } from "../../sdk/apps/youtube.ts";
 
@@ -16,17 +17,23 @@ async function handleYoutubeResponse(
     const response = await responsePromise;
 
     if (!response.ok) {
-      console.error(
-        `YouTube API error: ${response.status} - ${response.statusText}`,
-      );
       const errorBody = await response.text();
-      console.error("Error details:", errorBody);
+      logger.error(
+        `YouTube API error: ${response.status} - ${response.statusText}`,
+        {
+          status: response.status,
+          statusText: response.statusText,
+          errorBody,
+        },
+      );
       return { items: [] }; // Retorna array vazio em caso de erro
     }
 
     return await response.json();
   } catch (error) {
-    console.error("Erro ao processar resposta da YouTube API:", error);
+    logger.error("Erro ao processar resposta da YouTube API:", {
+      error,
+    });
     return { items: [] }; // Retorna array vazio em caso de erro
   }
 }
@@ -39,87 +46,100 @@ export default async function loader(
   upcoming: Video[];
   live: Video[];
 }> {
-  const { youtube, youtubeAPIKey } = ctx;
+  try {
+    const { youtube, youtubeAPIKey } = ctx;
 
-  const upcomingPromise = youtube["GET /search"]({
-    part: "snippet",
-    type: "video",
-    maxResults: 10,
-    order: "date",
-    channelId: "UCZiYbVptd3PVPf4f6eR6UaQ",
-    eventType: "upcoming",
-    key: youtubeAPIKey?.get(),
-  });
+    const upcomingPromise = youtube["GET /search"]({
+      part: "snippet",
+      type: "video",
+      maxResults: 10,
+      order: "date",
+      channelId: "UCZiYbVptd3PVPf4f6eR6UaQ",
+      eventType: "upcoming",
+      key: youtubeAPIKey?.get(),
+    });
 
-  const livePromise = youtube["GET /search"]({
-    part: "snippet",
-    type: "video",
-    maxResults: 10,
-    order: "date",
-    channelId: "UCZiYbVptd3PVPf4f6eR6UaQ",
-    eventType: "live",
-    key: youtubeAPIKey?.get(),
-  });
+    const livePromise = youtube["GET /search"]({
+      part: "snippet",
+      type: "video",
+      maxResults: 10,
+      order: "date",
+      channelId: "UCZiYbVptd3PVPf4f6eR6UaQ",
+      eventType: "live",
+      key: youtubeAPIKey?.get(),
+    });
 
-  const [upcoming, live] = await Promise.all([
-    handleYoutubeResponse(upcomingPromise),
-    handleYoutubeResponse(livePromise),
-  ]);
+    const [upcoming, live] = await Promise.all([
+      handleYoutubeResponse(upcomingPromise),
+      handleYoutubeResponse(livePromise),
+    ]);
 
-  const videosResponse = await youtube["GET /videos"]({
-    part: "snippet,contentDetails,statistics,status,liveStreamingDetails",
-    id: [
-      ...upcoming.items.map((item) => item.id.videoId),
-      ...live.items.map((item) => item.id.videoId),
-    ].join(","),
-    key: youtubeAPIKey?.get(),
-  });
+    const videosResponse = await youtube["GET /videos"]({
+      part: "snippet,contentDetails,statistics,status,liveStreamingDetails",
+      id: [
+        ...upcoming.items.map((item) => item.id.videoId),
+        ...live.items.map((item) => item.id.videoId),
+      ].join(","),
+      key: youtubeAPIKey?.get(),
+    });
 
-  if (!videosResponse.ok) {
-    console.error(
-      `YouTube API error: ${videosResponse.status} - ${videosResponse.statusText}`,
+    if (!videosResponse.ok) {
+      const errorBody = await videosResponse.text();
+      logger.error(
+        `YouTube API error: ${videosResponse.status} - ${videosResponse.statusText}`,
+        {
+          status: videosResponse.status,
+          statusText: videosResponse.statusText,
+          errorBody,
+        },
+      );
+      return { upcoming: [], live: [] };
+    }
+
+    const videos = await videosResponse.json();
+
+    const videosMap = new Map(
+      videos.items.map((video) => [video.id, video]),
     );
+
+    const liveVideos = live.items.map((item) => {
+      const video = videosMap.get(item.id.videoId ?? "");
+      if (!video) {
+        return null;
+      }
+
+      return video;
+    }).filter((video) => video !== null).sort(
+      (a, b) =>
+        new Date(b.liveStreamingDetails?.scheduledStartTime || "").getTime() -
+        new Date(a.liveStreamingDetails?.scheduledStartTime || "").getTime(),
+    );
+
+    const upcomingVideos = upcoming.items.map((item) => {
+      if (liveVideos.some((video) => video.id === item.id.videoId)) {
+        return null;
+      }
+
+      const video = videosMap.get(item.id.videoId ?? "");
+      if (!video) {
+        return null;
+      }
+
+      return video;
+    }).filter((video) => video !== null).sort(
+      (a, b) =>
+        new Date(b.liveStreamingDetails?.scheduledStartTime || "").getTime() -
+        new Date(a.liveStreamingDetails?.scheduledStartTime || "").getTime(),
+    );
+
+    return {
+      upcoming: upcomingVideos,
+      live: liveVideos,
+    };
+  } catch (error) {
+    logger.error("Erro ao processar resposta da YouTube API:", {
+      error,
+    });
     return { upcoming: [], live: [] };
   }
-
-  const videos = await videosResponse.json();
-
-  const videosMap = new Map(
-    videos.items.map((video) => [video.id, video]),
-  );
-
-  const liveVideos = live.items.map((item) => {
-    const video = videosMap.get(item.id.videoId ?? "");
-    if (!video) {
-      return null;
-    }
-
-    return video;
-  }).filter((video) => video !== null).sort(
-    (a, b) =>
-      new Date(b.liveStreamingDetails?.scheduledStartTime || "").getTime() -
-      new Date(a.liveStreamingDetails?.scheduledStartTime || "").getTime(),
-  );
-
-  const upcomingVideos = upcoming.items.map((item) => {
-    if (liveVideos.some((video) => video.id === item.id.videoId)) {
-      return null;
-    }
-
-    const video = videosMap.get(item.id.videoId ?? "");
-    if (!video) {
-      return null;
-    }
-
-    return video;
-  }).filter((video) => video !== null).sort(
-    (a, b) =>
-      new Date(b.liveStreamingDetails?.scheduledStartTime || "").getTime() -
-      new Date(a.liveStreamingDetails?.scheduledStartTime || "").getTime(),
-  );
-
-  return {
-    upcoming: upcomingVideos,
-    live: liveVideos,
-  };
 }
