@@ -16,8 +16,11 @@ async function handleYoutubeResponse(
   try {
     const response = await responsePromise;
 
+    console.log("response", response);
+
     if (!response.ok) {
       const errorBody = await response.text();
+      console.log("errorBody", errorBody);
       logger.error(
         `YouTube API error: ${response.status} - ${response.statusText}`,
         {
@@ -29,7 +32,9 @@ async function handleYoutubeResponse(
       return { items: [] }; // Retorna array vazio em caso de erro
     }
 
-    return await response.json();
+    const json = await response.json();
+    console.log("json", json);
+    return json;
   } catch (error) {
     logger.error("Erro ao processar resposta da YouTube API:", {
       error,
@@ -49,6 +54,10 @@ export default async function loader(
   try {
     const { youtube, youtubeAPIKey } = ctx;
 
+    const key = youtubeAPIKey?.get();
+
+    console.log("youtubeAPIKey", youtubeAPIKey?.get());
+
     const upcomingPromise = youtube["GET /search"]({
       part: "snippet",
       type: "video",
@@ -56,7 +65,17 @@ export default async function loader(
       order: "date",
       channelId: "UCZiYbVptd3PVPf4f6eR6UaQ",
       eventType: "upcoming",
-      key: youtubeAPIKey?.get(),
+      key,
+    });
+
+    console.log("upcomingPromise", upcomingPromise, {
+      part: "snippet",
+      type: "video",
+      maxResults: 10,
+      order: "date",
+      channelId: "UCZiYbVptd3PVPf4f6eR6UaQ",
+      eventType: "upcoming",
+      key,
     });
 
     const livePromise = youtube["GET /search"]({
@@ -66,7 +85,17 @@ export default async function loader(
       order: "date",
       channelId: "UCZiYbVptd3PVPf4f6eR6UaQ",
       eventType: "live",
-      key: youtubeAPIKey?.get(),
+      key,
+    });
+
+    console.log("livePromise", livePromise, {
+      part: "snippet",
+      type: "video",
+      maxResults: 10,
+      order: "date",
+      channelId: "UCZiYbVptd3PVPf4f6eR6UaQ",
+      eventType: "live",
+      key,
     });
 
     const [upcoming, live] = await Promise.all([
@@ -74,13 +103,16 @@ export default async function loader(
       handleYoutubeResponse(livePromise),
     ]);
 
+    console.log("upcoming", upcoming);
+    console.log("live", live);
+
     const videosResponse = await youtube["GET /videos"]({
       part: "snippet,contentDetails,statistics,status,liveStreamingDetails",
       id: [
         ...upcoming.items.map((item) => item.id.videoId),
         ...live.items.map((item) => item.id.videoId),
       ].join(","),
-      key: youtubeAPIKey?.get(),
+      key,
     });
 
     if (!videosResponse.ok) {
@@ -97,6 +129,8 @@ export default async function loader(
     }
 
     const videos = await videosResponse.json();
+
+    console.log("videos", videos);
 
     const videosMap = new Map(
       videos.items.map((video) => [video.id, video]),
@@ -132,11 +166,15 @@ export default async function loader(
         new Date(a.liveStreamingDetails?.scheduledStartTime || "").getTime(),
     );
 
+    console.log("upcomingVideos", upcomingVideos);
+    console.log("liveVideos", liveVideos);
+
     return {
       upcoming: upcomingVideos,
       live: liveVideos,
     };
   } catch (error) {
+    console.log("error", error);
     logger.error("Erro ao processar resposta da YouTube API:", {
       error,
     });
