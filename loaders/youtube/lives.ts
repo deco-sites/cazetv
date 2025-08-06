@@ -66,6 +66,7 @@ export default async function loader(
       channelId: "UCZiYbVptd3PVPf4f6eR6UaQ",
       eventType: "upcoming",
       key,
+      regionCode: "BR",
     });
 
     console.log("upcomingPromise", upcomingPromise, {
@@ -86,6 +87,7 @@ export default async function loader(
       channelId: "UCZiYbVptd3PVPf4f6eR6UaQ",
       eventType: "live",
       key,
+      regionCode: "BR",
     });
 
     console.log("livePromise", livePromise, {
@@ -113,6 +115,7 @@ export default async function loader(
         ...live.items.map((item) => item.id.videoId),
       ].join(","),
       key,
+      regionCode: "BR",
     });
 
     if (!videosResponse.ok) {
